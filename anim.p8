@@ -10,8 +10,23 @@ player.ay=0
 player.sprite = 0
 player.prevsprite = 0
 player.moving = false
-player.grounded = false
+player.shooting = false
 player.flip = false
+bullets = {}
+
+bulletcontruct = function(x,y)
+  local obj = {}
+
+  obj.pos = {x=x, y=y}
+
+  obj.sprite = 11
+
+  obj.update = function(this)
+    this.pos.x +=6
+  end
+
+  return obj
+end
 
 function _init()
 player.vy =1
@@ -20,7 +35,7 @@ end
 
 function _update()
   player.vy += player.ay
-		player.y += player.vy
+	player.y += player.vy
 	if (btn(0)) then 
 	  player.x-= 2
 	  player.flip = true
@@ -33,25 +48,34 @@ function _update()
 	  player.prevsprite = 0 
 	  player.sprite = 0 
 	end
-	
+  if (btn(5)) then
+      shoot()
+	end
 	if (grounded(player)) then
-	 player.ay=0
-	 player.vy=0
+	  player.ay=0
+	  player.vy=0
 		if(btn(2)) then
 			player.vy -=6
 			player.ay = 1
 		end
 	end
+  foreach(bullets, function(obj)
+    obj.update(obj)
+  end)
 end
 
 function _draw()
 	cls()
-	//rectfill(0,0,128,128,12)
- mapdraw(0,0,0,0,16,16)
- palt(2, true)
- palt(0,false)
- spr(player.sprite,player.x,player.y,1,1,player.flip)
+	rectfill(0,0,128,128,12)
+  mapdraw(0,0,0,0,16,16)
+  palt(2, true)
+  palt(0,false)
+  spr(player.sprite,player.x,player.y,1,1,player.flip)
+  foreach(bullets, function(obj)
+    spr(obj.sprite, obj.pos.x, obj.pos.y)
+  end)
  print(grounded(player),7)
+
 end
 
 function move()
@@ -73,8 +97,15 @@ function move()
   end
 end
 
+function shoot()
+  player.sprite = 9
+  if (btn(4)) then
+    player.sprite = 10
+    add(bullets, bulletcontruct(player.x+2,player.y+3))
+  end
+end
+
 function grounded(char)
-  char.grounded = false
 	left = mget(flr(char.x+1)/8,flr(char.y)/8+1)
 	right = mget(flr(char.x+5)/8,flr(char.y)/8+1)
 	if fget(left,0) then
