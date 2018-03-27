@@ -35,25 +35,21 @@ end
 
 function _update()
   player.vy += player.ay
-<<<<<<< HEAD
-		player.y += player.vy
-		player.x += player.vx
-=======
-	player.y += player.vy
->>>>>>> 327eef80dab4212baa8066ed13e33cff32ad8e4f
-	if (btn(0)) then 
-	  player.vx=-2
-	  player.flip = true
-	  move()
-	elseif (btn(1)) then
-	 	player.vx=2
-	 	player.flip = false
-	 	move()
-	else
-	  player.prevsprite = 0 
-	  player.sprite = 0 
-	  player.vx *= .3
-	end
+  player.y += player.vy
+  player.x += player.vx
+  if (btn(0)) then 
+    player.vx=-2
+    player.flip = true
+    move()
+  elseif (btn(1)) then
+    player.vx=2
+    player.flip = false
+    move()
+  else
+    player.prevsprite = 0 
+    player.sprite = 0 
+    player.vx *= .3
+  end
   if (btn(5)) then
       shoot()
 	end
