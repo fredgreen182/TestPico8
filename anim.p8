@@ -21,17 +21,19 @@ end
 function _update()
   player.vy += player.ay
 		player.y += player.vy
+		player.x += player.vx
 	if (btn(0)) then 
-	  player.x-= 2
+	  player.vx=-2
 	  player.flip = true
 	  move()
 	elseif (btn(1)) then
-	 	player.x+=2
+	 	player.vx=2
 	 	player.flip = false
 	 	move()
 	else
 	  player.prevsprite = 0 
 	  player.sprite = 0 
+	  player.vx *= .3
 	end
 	
 	if (grounded(player)) then
