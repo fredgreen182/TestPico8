@@ -4,41 +4,54 @@ __lua__
 player = {}
 player.x=1*8
 player.y =64
+player.vx=0
+player.vy=0
+player.ay=0
 player.sprite = 0
 player.prevsprite = 0
 player.moving = false
 player.grounded = false
 player.flip = false
 
+function _init()
+player.vy =1
+player.ay =0
+end
+
 function _update()
+  player.vy += player.ay
+		player.y += player.vy
 	if (btn(0)) then 
 	  player.x-= 2
 	  player.flip = true
 	  move()
 	elseif (btn(1)) then
-	 		player.x+=2
-	 		player.flip = false
-	 		move()
+	 	player.x+=2
+	 	player.flip = false
+	 	move()
 	else
 	  player.prevsprite = 0 
 	  player.sprite = 0 
 	end
+	
 	if (grounded(player)) then
+	 player.ay=0
+	 player.vy=0
 		if(btn(2)) then
-			player.y -=6
+			player.vy -=6
+			player.ay = 1
 		end
-	else
-		player.y +=2
 	end
 end
 
 function _draw()
 	cls()
-	rectfill(0,0,128,128,12)
-  mapdraw(0,0,0,0,16,16)
-  palt(2, true)
-  palt(0,false)
-  spr(player.sprite,player.x,player.y,1,1,player.flip)
+	//rectfill(0,0,128,128,12)
+ mapdraw(0,0,0,0,16,16)
+ palt(2, true)
+ palt(0,false)
+ spr(player.sprite,player.x,player.y,1,1,player.flip)
+ print(grounded(player),7)
 end
 
 function move()
