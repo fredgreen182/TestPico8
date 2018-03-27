@@ -4,6 +4,9 @@ __lua__
 player = {}
 player.x=1*8
 player.y =64
+player.vx=0
+player.vy=0
+player.ay=0
 player.sprite = 0
 player.prevsprite = 0
 player.moving = false
@@ -25,29 +28,36 @@ bulletcontruct = function(x,y)
   return obj
 end
 
+function _init()
+player.vy =1
+player.ay =0
+end
+
 function _update()
-  player.shooting = false
+  player.vy += player.ay
+	player.y += player.vy
 	if (btn(0)) then 
 	  player.x-= 2
 	  player.flip = true
 	  move()
 	elseif (btn(1)) then
-	 		player.x+=2
-	 		player.flip = false
-	 		move()
+	 	player.x+=2
+	 	player.flip = false
+	 	move()
 	else
 	  player.prevsprite = 0 
 	  player.sprite = 0 
 	end
-  if (btn(2)) then
+  if (btn(5)) then
       shoot()
-  end
+	end
 	if (grounded(player)) then
-    if(btn(5)) then
-			player.y -=6
+	  player.ay=0
+	  player.vy=0
+		if(btn(2)) then
+			player.vy -=6
+			player.ay = 1
 		end
-	else
-		player.y +=2
 	end
   foreach(bullets, function(obj)
     obj.update(obj)
@@ -64,6 +74,8 @@ function _draw()
   foreach(bullets, function(obj)
     spr(obj.sprite, obj.pos.x, obj.pos.y)
   end)
+ print(grounded(player),7)
+
 end
 
 function move()
